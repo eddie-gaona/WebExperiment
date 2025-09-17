@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amplitude Analytics & Web Experiments Demo</title>
+    
+    <!-- Anti-Flicker Snippet for Web Experiments -->
+    <script>
+        (function(d, h){
+            var apiKey = "21a79579d9e9996ce5cc452d8e2f043c";
+            var timeout = 1000;
+            var id = "amp-exp-css";
+            try {
+                if (!d.getElementById(id)) {
+                    var st = d.createElement("style");
+                    st.id = id;
+                    st.innerText = "* { visibility: hidden !important; background-image: none !important; }";
+                    h.appendChild(st);
+                    window.setTimeout(function () {st.remove()}, timeout);
+                    var sc = d.createElement("script");
+                    sc.src = "https://cdn.amplitude.com/script/"+apiKey+".experiment.js";
+                    sc.async = true;
+                    sc.onerror = function () {st.remove()};
+                    h.insertBefore(sc, d.currentScript || h.lastChild);
+                }
+            } catch(e) {console.error(e)}
+        })(document, document.head);
+    </script>
+    
+    <!-- Amplitude Browser SDK -->
+    <script src="https://cdn.amplitude.com/script/21a79579d9e9996ce5cc452d8e2f043c.js"></script>
+    <script>
+        window.amplitude.init('21a79579d9e9996ce5cc452d8e2f043c', {
+            autocapture: false
+        });
+    </script>
+    
+    <!-- Styles -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .status {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .status h3 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        
+        .status p {
+            margin-bottom: 5px;
+        }
+        
+        .experiment-variants {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .variant-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+        
+        .variant-card:hover {
+            border-color: #667eea;
+        }
+        
+        .variant-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .event-log {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            padding: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .button-group {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚀 Amplitude Analytics Demo</h1>
+            <p>Testing Browser SDK and Web Experiments Integration</p>
+        </header>
+        
+        <main class="main-content">
+            <section class="section">
+                <h2>📊 Event Tracking Demo</h2>
+                <p>Click the buttons below to test Amplitude event tracking:</p>
+                
+                <div class="button-group">
+                    <button class="btn" onclick="trackPageView()">Track Page View</button>
+                    <button class="btn" onclick="trackButtonClick('demo_button')">Track Button Click</button>
+                    <button class="btn" onclick="trackCustomEvent()">Track Custom Event</button>
+                    <button class="btn" onclick="identifyUser()">Identify User</button>
+                </div>
+                
+                <div class="status">
+                    <h3>📈 Integration Status</h3>
+                    <p><strong>API Key:</strong> 21a79579d9e9996ce5cc452d8e2f043c</p>
+                    <p><strong>Amplitude SDK:</strong> <span id="amplitude-status">Loading...</span></p>
+                    <p><strong>Web Experiment:</strong> <span id="experiment-status">Loading...</span></p>
+                    <p><strong>Events Sent:</strong> <span id="event-count">0</span></p>
+                </div>
+                
+                <div class="event-log" id="event-log">
+                    <strong>Event Log:</strong><br>
+                    Waiting for events...
+                </div>
+            </section>
+            
+            <section class="section">
+                <h2>🧪 Web Experiments</h2>
+                <p>This section demonstrates Web Experiment capabilities. Different variants can be tested here.</p>
+                
+                <div class="experiment-variants">
+                    <div class="variant-card" onclick="trackExperimentInteraction('variant_a')">
+                        <h3>Variant A</h3>
+                        <p>This is the control version of our experiment. It represents the original experience.</p>
+                        <button class="btn">Original Button</button>
+                    </div>
+                    
+                    <div class="variant-card" onclick="trackExperimentInteraction('variant_b')">
+                        <h3>Variant B</h3>
+                        <p>This is an alternative version being tested. It might have different colors, text, or layout.</p>
+                        <button class="btn">New Button</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <p>&copy; 2024 Amplitude Demo - Built with Analytics & Experimentation</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Event counter
+        let eventCount = 0;
+        
+        // Update event counter and log
+        function logEvent(eventName, properties = {}) {
+            eventCount++;
+            document.getElementById('event-count').textContent = eventCount;
+            
+            const logElement = document.getElementById('event-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${eventName}: ${JSON.stringify(properties)}\n`;
+            
+            if (logElement.textContent === 'Waiting for events...') {
+                logElement.innerHTML = '<strong>Event Log:</strong><br>' + logEntry;
+            } else {
+                logElement.innerHTML += logEntry;
+            }
+            
+            // Auto-scroll to bottom
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        // Event tracking functions
+        function trackPageView() {
+            amplitude.track('Page View', {
+                page: 'Demo Page',
+                timestamp: new Date().toISOString(),
+                user_agent: navigator.userAgent
+            });
+            logEvent('Page View', { page: 'Demo Page' });
+        }
+        
+        function trackButtonClick(buttonName) {
+            amplitude.track('Button Click', {
+                button_name: buttonName,
+                location: 'demo_section'
+            });
+            logEvent('Button Click', { button_name: buttonName });
+        }
+        
+        function trackCustomEvent() {
+            amplitude.track('Custom Demo Event', {
+                event_type: 'demo',
+                feature: 'custom_tracking',
+                value: Math.floor(Math.random() * 100)
+            });
+            logEvent('Custom Demo Event', { feature: 'custom_tracking' });
+        }
+        
+        function identifyUser() {
+            const userId = 'demo_user_' + Date.now();
+            amplitude.setUserId(userId);
+            amplitude.identify(new amplitude.Identify()
+                .set('user_type', 'demo')
+                .set('demo_session', true)
+                .set('last_seen', new Date().toISOString())
+            );
+            logEvent('User Identified', { user_id: userId });
+        }
+        
+        function trackExperimentInteraction(variant) {
+            amplitude.track('Experiment Interaction', {
+                variant: variant,
+                experiment_name: 'variant_test',
+                interaction_type: 'click'
+            });
+            logEvent('Experiment Interaction', { variant: variant });
+        }
+        
+        // Check integration status
+        function checkIntegrationStatus() {
+            // Check Amplitude SDK
+            if (typeof amplitude !== 'undefined' && amplitude.init) {
+                document.getElementById('amplitude-status').innerHTML = '✅ Loaded';
+                document.getElementById('amplitude-status').style.color = 'green';
+            } else {
+                document.getElementById('amplitude-status').innerHTML = '❌ Failed';
+                document.getElementById('amplitude-status').style.color = 'red';
+            }
+            
+            // Check Web Experiment (this will be loaded asynchronously)
+            if (window.experimentSDK || document.querySelector('script[src*="experiment.js"]')) {
+                document.getElementById('experiment-status').innerHTML = '✅ Loaded';
+                document.getElementById('experiment-status').style.color = 'green';
+            } else {
+                document.getElementById('experiment-status').innerHTML = '⏳ Loading...';
+                document.getElementById('experiment-status').style.color = 'orange';
+            }
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check status after a short delay to allow scripts to load
+            setTimeout(checkIntegrationStatus, 1000);
+            
+            // Track initial page load
+            setTimeout(() => {
+                amplitude.track('Page Loaded', {
+                    page_url: window.location.href,
+                    referrer: document.referrer,
+                    load_time: performance.now()
+                });
+                logEvent('Page Loaded', { page_url: window.location.href });
+            }, 500);
+            
+            // Re-check experiment status periodically
+            setInterval(() => {
+                if (document.getElementById('experiment-status').textContent === '⏳ Loading...') {
+                    checkIntegrationStatus();
+                }
+            }, 2000);
+        });
+        
+        // Track page unload
+        window.addEventListener('beforeunload', function() {
+            amplitude.track('Page Unload', {
+                time_on_page: performance.now(),
+                events_triggered: eventCount
+            });
+        });
+    </script>
+</body>
+</html>
